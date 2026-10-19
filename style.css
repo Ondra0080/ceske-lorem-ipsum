@@ -1,4 +1,4 @@
-/* České Lorem Ipsum v1.1 — responzivní sazba a kompaktní režim pro iframe. */
+/* České Lorem Ipsum v1.2 — responzivní sazba a kompaktní režim pro iframe. */
 :root{color-scheme:light;--paper:#f5f3ed;--ink:#252923;--muted:#686b62;--line:#dcded3;--accent:#ba4326;--white:#fffefa}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
@@ -53,3 +53,21 @@ textarea{width:100%;height:340px;display:block;resize:vertical;border:0;backgrou
 .headings-check input{flex-shrink:0}
 .paragraph-summary{font-size:11px;color:var(--muted);line-height:1.6;margin:12px 0 0}
 @media(max-width:540px){.paragraph-options{padding:18px}.paragraph-grid{grid-template-columns:minmax(0,1fr);gap:22px}.headings-check{grid-column:auto}}
+
+/* v1.2 — přepínače nadpisu a seznamu, společné pro všechny odstavce. */
+.option-group{min-width:0;border:0;padding:0;margin:0}
+.option-group legend{float:none;width:auto;font-size:12px;font-weight:600;margin:0 0 10px;padding:0}
+.heading-group,.list-group{grid-column:1/-1}
+.heading-group{border-top:1px solid var(--line);padding-top:20px}
+.segments{display:flex;flex-wrap:wrap;gap:7px}
+.segments label{position:relative;cursor:pointer;display:flex;min-width:0}
+.segments input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.segments span{display:block;border:1px solid #ced1c3;border-radius:6px;background:var(--white);padding:11px 15px;font-size:12px;line-height:1.3}
+.segments input:checked+span{background:var(--ink);border-color:var(--ink);color:var(--white)}
+.segments input:focus-visible+span{outline:3px solid var(--accent);outline-offset:3px}
+.list-count-field{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:14px}
+.list-count-field[hidden]{display:none}
+.list-count-field label{font-size:12px;font-weight:600}
+.list-count-field input{width:76px;height:38px}
+.list-count-field p{font-size:11px;color:var(--muted);margin:0;line-height:1.6}
+@media(max-width:540px){.segments span{padding:11px 12px;font-size:11px}.list-count-field p{flex-basis:100%}}

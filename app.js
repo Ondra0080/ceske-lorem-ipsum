@@ -1,4 +1,4 @@
-// České Lorem Ipsum v1.1 — generuje český výplňový text přímo v prohlížeči.
+// České Lorem Ipsum v1.2 — generuje český výplňový text přímo v prohlížeči.
 "use strict";
 const sentences = [
 "Ranní světlo pomalu proniká otevřeným oknem a kreslí jemné stíny na dřevěnou podlahu.",
@@ -64,6 +64,24 @@ const headings = [
   "S lehkostí do dalšího dne", "Přirozený prostor pro změnu",
   "Kousek světa za rohem", "Všechno má své místo"
 ];
+const listItems = [
+  "Jasný směr a promyšlený začátek",
+  "Dostatek prostoru pro nové nápady",
+  "Přirozená rovnováha barev a tvarů",
+  "Pozornost věnovaná drobným detailům",
+  "Srozumitelné uspořádání informací",
+  "Čerstvý pohled na známé souvislosti",
+  "Jednoduché řešení každodenních potřeb",
+  "Pravidelné ověřování jednotlivých kroků",
+  "Otevřená komunikace a vzájemná důvěra",
+  "Pečlivě zvolené přírodní materiály",
+  "Klidná atmosféra pro soustředěnou práci",
+  "Plynulý přechod od myšlenky k výsledku",
+  "Příjemný rytmus všedních okamžiků",
+  "Malé změny s viditelným přínosem",
+  "Spolehlivý základ pro další rozvoj",
+  "Důraz na přehlednost a snadnou orientaci"
+];
 function paragraphRange(length = 5, randomness = 20) {
   if (!Number.isInteger(length) || length < 1 || length > 12 ||
       !Number.isInteger(randomness) || randomness < 0 || randomness > 100) {
@@ -82,6 +100,12 @@ function generateText(count, unit, diacritics = true, options = {}) {
   let text;
   if (unit === "paragraphs") {
     const range = paragraphRange(options.length ?? 5, options.randomness ?? 20);
+    const listType = options.listType ?? "none";
+    const itemCount = options.itemCount ?? 3;
+    if (!["none", "bullets", "numbered"].includes(listType)) throw new Error("Neplatný typ seznamu.");
+    if (listType !== "none" && (!Number.isInteger(itemCount) || itemCount < 1 || itemCount > 10)) {
+      throw new Error("Počet položek musí být od 1 do 10.");
+    }
     // Samostatně zamíchané nadpisy se v jedné dávce neopakují.
     const titles = [...headings];
     for (let i = titles.length - 1; i > 0; i--) {
@@ -91,7 +115,18 @@ function generateText(count, unit, diacritics = true, options = {}) {
     text = Array.from({ length: numeric }, (_, index) => {
       const sentenceCount = range.min + Math.floor(Math.random() * (range.max - range.min + 1));
       const body = Array.from({ length: sentenceCount }, next).join(" ");
-      return options.headings ? titles[index] + "\n" + body : body;
+      const parts = options.headings ? [titles[index], body] : [body];
+      if (listType !== "none") {
+        const items = [...listItems];
+        for (let i = items.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [items[i], items[j]] = [items[j], items[i]];
+        }
+        // Každý odstavec má vlastní seznam; číslování začíná znovu od jedničky.
+        parts.push(...items.slice(0, itemCount).map((item, i) =>
+          (listType === "numbered" ? (i + 1) + ". " : "• ") + item));
+      }
+      return parts.join("\n");
     }).join("\n\n");
   } else if (unit === "sentences") {
     text = Array.from({ length: numeric }, next).join(" ");
@@ -116,7 +151,8 @@ if (typeof document !== "undefined") {
   const announce = message => { status.textContent = message; };
   function updateStats() {
     const text = output.value;
-    byId("words-count").textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString("cs-CZ");
+    const wordsOnly = text.replace(/^(?:• |\d+\. )/gm, "").trim();
+    byId("words-count").textContent = (wordsOnly ? wordsOnly.split(/\s+/).length : 0).toLocaleString("cs-CZ");
     byId("characters-count").textContent = Array.from(text).length.toLocaleString("cs-CZ");
   }
   const paragraphOptions = byId("paragraph-options");
@@ -125,7 +161,9 @@ if (typeof document !== "undefined") {
   const paragraphSettings = () => ({
     length: Number(lengthSlider.value),
     randomness: Number(randomnessSlider.value),
-    headings: byId("paragraph-headings").checked
+    headings: byId("paragraph-headings").checked,
+    listType: form.querySelector('input[name="paragraph-list"]:checked').value,
+    itemCount: Number(byId("list-count").value)
   });
   const sentenceLabel = n => n === 1 ? "věta" : n <= 4 ? "věty" : "vět";
   function updateParagraphLabels() {
@@ -139,6 +177,14 @@ if (typeof document !== "undefined") {
     lengthSlider.setAttribute("aria-valuetext", settings.length + " " + sentenceLabel(settings.length));
     randomnessSlider.setAttribute("aria-valuetext", settings.randomness + " procent");
   }
+  function updateListControls() {
+    const enabled = paragraphSettings().listType !== "none";
+    byId("list-count-field").hidden = !enabled;
+    byId("list-count").disabled = !enabled;
+  }
+  form.querySelectorAll('input[name="paragraph-list"]').forEach(input => {
+    input.addEventListener("change", updateListControls);
+  });
   lengthSlider.addEventListener("input", updateParagraphLabels);
   randomnessSlider.addEventListener("input", updateParagraphLabels);
   form.addEventListener("submit", event => {
@@ -182,6 +228,7 @@ if (typeof document !== "undefined") {
   });
   output.addEventListener("input", updateStats);
   updateParagraphLabels();
+  updateListControls();
   output.value = generateText(3, "paragraphs", true, paragraphSettings());
   updateStats();
 }

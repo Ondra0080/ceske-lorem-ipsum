@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- České Lorem Ipsum v1.1 — samostatný generátor českého výplňového textu. -->
+<!-- České Lorem Ipsum v1.2 — samostatný generátor českého výplňového textu. -->
 <html lang="cs">
 <head>
 <meta charset="utf-8">
@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#f5f3ed">
 <title>České Lorem Ipsum — výplňový text s háčky a čárkami</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c94727'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='serif' font-size='48' fill='white'%3Eč%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=1.1">
-<script src="app.js?v=1.1" defer></script>
+<link rel="stylesheet" href="style.css?v=1.2">
+<script src="app.js?v=1.2" defer></script>
 </head>
 <body>
 <div class="page">
@@ -33,7 +33,7 @@
 <legend>Nastavení odstavců</legend>
 <div class="paragraph-grid">
 <div class="slider-field">
-<label for="paragraph-length">Délka odstavců <output id="length-value" for="paragraph-length">5 vět</output></label>
+<label for="paragraph-length">Délka jednoho odstavce <output id="length-value" for="paragraph-length">5 vět</output></label>
 <input id="paragraph-length" name="paragraph-length" type="range" min="1" max="12" step="1" value="5" aria-describedby="paragraph-range">
 <div class="slider-scale" aria-hidden="true"><span>Krátké</span><span>Dlouhé</span></div>
 </div>
@@ -42,7 +42,26 @@
 <input id="paragraph-randomness" name="paragraph-randomness" type="range" min="0" max="100" step="1" value="20" aria-describedby="paragraph-range">
 <div class="slider-scale" aria-hidden="true"><span>Stejný počet vět</span><span>Velké rozdíly</span></div>
 </div>
-<label class="check headings-check"><input id="paragraph-headings" name="paragraph-headings" type="checkbox"><span>Nadpis před každým odstavcem</span></label>
+<fieldset class="option-group heading-group">
+<legend>Nadpis odstavce</legend>
+<div class="segments">
+<label><input type="radio" name="paragraph-heading" value="none" checked><span>Bez nadpisu</span></label>
+<label><input id="paragraph-headings" type="radio" name="paragraph-heading" value="heading"><span>S nadpisem</span></label>
+</div>
+</fieldset>
+<fieldset class="option-group list-group">
+<legend>Seznam na konci každého odstavce</legend>
+<div class="segments">
+<label><input type="radio" name="paragraph-list" value="none" checked><span>Bez seznamu</span></label>
+<label><input type="radio" name="paragraph-list" value="bullets"><span>Odrážky</span></label>
+<label><input type="radio" name="paragraph-list" value="numbered"><span>Číslované body</span></label>
+</div>
+<div id="list-count-field" class="list-count-field" hidden>
+<label for="list-count">Počet položek</label>
+<input id="list-count" name="list-count" type="number" min="1" max="10" step="1" value="3" required disabled aria-describedby="list-note">
+<p id="list-note">1–10 položek za každým odstavcem, navíc k nastavenému počtu vět.</p>
+</div>
+</fieldset>
 </div>
 <p id="paragraph-range" class="paragraph-summary">Každý odstavec: 4–6 vět. Nastavení platí pro všechny odstavce.</p>
 </fieldset>
@@ -55,7 +74,7 @@
 <section class="notes" aria-label="O generátoru"><p><span>01 / ČEŠTINA SE VŠÍM VŠUDY</span>Háčky, čárky i přirozená délka českých slov. Ať tvůj návrh obstojí i s reálným textem.</p><p><span>02 / JEN TEXT. ŽÁDNÉ OKOLKY.</span>Bez registrace a bez odesílání textu na server. Všechno vzniká přímo ve tvém prohlížeči.</p></section>
 <noscript><p class="noscript">Pro generování textu prosím povol JavaScript v prohlížeči.</p></noscript>
 </main>
-<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.1</span></span></footer>
+<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.2</span></span></footer>
 </div>
 </body>
 </html>
