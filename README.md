@@ -1,6 +1,6 @@
 # České Lorem Ipsum
 
-**Verze 1.4**
+**Verze 1.5**
 
 Generátor českého výplňového textu pro grafické návrhy, sazbu a weby. Text vzniká náhodným skládáním předem připravených českých vět přímo v prohlížeči.
 
@@ -17,6 +17,7 @@ Generátor českého výplňového textu pro grafické návrhy, sazbu a weby. Te
 - Délka věty nastavitelná šoupátkem: základ 5–20 slov; náhodnost délky na druhém šoupátku 0–100 %.
 - Zakončení vět tečkou, otazníkem, vykřičníkem nebo náhodně.
 - Volitelné zobrazení každé věty na samostatném řádku.
+- Samostatné řádky vět bez seznamu, s odrážkami nebo jako číslovaný seznam.
 - Slova: krátká (1–4 znaky), střední (5–8), dlouhá (9 a více) nebo mix.
 - Běžná velikost písmen (velké pouze první písmeno výstupu), VELKÁ, malá nebo První Velké u každého slova.
 - Oddělení slov mezerou, čárkou nebo novým řádkem.

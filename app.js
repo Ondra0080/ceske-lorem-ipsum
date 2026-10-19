@@ -1,4 +1,4 @@
-// České Lorem Ipsum v1.4 — generuje český výplňový text přímo v prohlížeči.
+// České Lorem Ipsum v1.5 — generuje český výplňový text přímo v prohlížeči.
 "use strict";
 const sentences = [
 "Ranní světlo pomalu proniká otevřeným oknem a kreslí jemné stíny na dřevěnou podlahu.",
@@ -192,12 +192,15 @@ function generateText(count, unit, diacritics = true, options = {}) {
     const endings = {period: ".", question: "?", exclamation: "!"};
     const ending = options.ending ?? "period";
     if (ending !== "random" && !Object.hasOwn(endings, ending)) throw new Error("Neplatné zakončení vět.");
-    text = Array.from({length: numeric}, () => {
+    const sentenceList = options.sentenceLines ? (options.sentenceList ?? "none") : "none";
+    if (!["none","bullets","numbered"].includes(sentenceList)) throw new Error("Neplatný seznam vět.");
+    text = Array.from({length: numeric}, (_, index) => {
       const target = bounds.min + Math.floor(Math.random() * (bounds.max - bounds.min + 1));
       const candidates = sentenceCandidates(target);
       const sentence = candidates[Math.floor(Math.random() * candidates.length)];
       const punctuation = ending === "random" ? [".","?","!"][Math.floor(Math.random() * 3)] : endings[ending];
-      return sentence.replace(/[.!?]+$/, "") + punctuation;
+      const prefix = sentenceList === "bullets" ? "• " : sentenceList === "numbered" ? (index + 1) + ". " : "";
+      return prefix + sentence.replace(/[.!?]+$/, "") + punctuation;
     }).join(options.sentenceLines ? "\n" : " ");
   } else {
     const pool = wordPool(options.wordLength ?? "mix", diacritics);
@@ -251,7 +254,8 @@ if (typeof document !== "undefined") {
     sentenceLength: Number(byId("sentence-length").value),
     sentenceRandomness: Number(byId("sentence-randomness").value),
     ending: byId("sentence-ending").value,
-    sentenceLines: byId("sentence-lines").checked
+    sentenceLines: byId("sentence-lines").checked,
+    sentenceList: form.querySelector('input[name="sentence-list"]:checked').value
   });
   const wordSettings = () => ({
     wordLength: byId("word-length").value,
@@ -259,6 +263,12 @@ if (typeof document !== "undefined") {
     separator: byId("word-separator").value,
     repeat: byId("word-repeat").checked
   });
+  function updateSentenceList() {
+    const enabled = byId("sentence-lines").checked;
+    byId("sentence-list-options").hidden = !enabled;
+    byId("sentence-list-options").disabled = !enabled;
+  }
+  byId("sentence-lines").addEventListener("change", updateSentenceList);
   function updateSentenceLabels() {
     const settings = sentenceSettings();
     const bounds = sentenceBounds(settings.sentenceLength, settings.sentenceRandomness);
@@ -362,6 +372,7 @@ if (typeof document !== "undefined") {
   updateParagraphLabels();
   updateListControls();
   updateSentenceLabels();
+  updateSentenceList();
   updateWordLimit();
   output.value = generateText(3, "paragraphs", true, paragraphSettings());
   updateStats();
