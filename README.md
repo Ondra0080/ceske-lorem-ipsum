@@ -1,15 +1,20 @@
-# České Lorem Ipsum · v1.0
+# České Lorem Ipsum
 
-Český výplňový text pro grafické návrhy, sazbu a weby. Bez registrace, externích knihoven, analytiky a placeného API.
+**Verze 1.1**
+
+Generátor českého výplňového textu pro grafické návrhy, sazbu a weby. Text vzniká náhodným skládáním předem připravených českých vět přímo v prohlížeči.
 
 ## Funkce
 
-- Volba 1–30 odstavců, 1–100 vět nebo 1–3000 slov.
+- Generování 1–30 odstavců, 1–100 vět nebo 1–3000 slov.
+- Společné nastavení délky všech odstavců: základ 1–12 vět.
+- Nastavitelná náhodnost délky odstavců od 0 do 100 % s přehledem výsledného rozsahu.
+- Při nulové náhodnosti má každý odstavec stejný počet vět; počet slov se může lišit.
+- Volitelný krátký český nadpis před každým odstavcem.
 - Česká diakritika s možností vypnutí.
-- Kopírování do schránky a stažení souboru TXT v UTF-8.
-- Upravitelné textové pole, počítadlo slov a znaků včetně mezer.
-- Responzivní vzhled a kompaktní režim pro iframe.
-- Věty jsou předem napsané české ukázky, náhodně kombinované v prohlížeči. Nejde o generování pomocí AI.
+- Kopírování textu do schránky a stažení TXT v UTF-8.
+- Upravitelné textové pole a počítadlo slov a znaků včetně mezer.
+- Responzivní vzhled a kompaktní zobrazení pro vložení do webu.
+- Bez registrace, analytiky, externích knihoven a placeného API.
 
-
-Vytvořeno pro [Bahula Studio](https://bahulastudio.cz).
+Vytvořeno pomocí ChatGPT pro [Bahula Studio](https://bahulastudio.cz).

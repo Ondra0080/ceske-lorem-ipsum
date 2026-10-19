@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- České Lorem Ipsum v1.0 — samostatný generátor českého výplňového textu. -->
+<!-- České Lorem Ipsum v1.1 — samostatný generátor českého výplňového textu. -->
 <html lang="cs">
 <head>
 <meta charset="utf-8">
@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#f5f3ed">
 <title>České Lorem Ipsum — výplňový text s háčky a čárkami</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c94727'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='serif' font-size='48' fill='white'%3Eč%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css">
-<script src="app.js" defer></script>
+<link rel="stylesheet" href="style.css?v=1.1">
+<script src="app.js?v=1.1" defer></script>
 </head>
 <body>
 <div class="page">
@@ -22,11 +22,30 @@
 <div class="diacritic-art" aria-hidden="true">Aa<span>á</span><small>č ď ě ň ř š ť ů ž</small></div>
 </section>
 <section class="workspace" aria-label="Generátor českého textu">
-<form id="generator" class="controls">
+<form id="generator">
+<div class="controls">
 <div class="field amount-field"><label for="amount">Kolik textu?</label><input id="amount" name="amount" type="number" min="1" max="30" step="1" value="3" required aria-describedby="limit"><span id="limit" class="hint">1–30</span></div>
 <div class="field"><label for="unit">Jednotka</label><select id="unit" name="unit"><option value="paragraphs">Odstavce</option><option value="sentences">Věty</option><option value="words">Slova</option></select></div>
 <label class="check"><input id="diacritics" type="checkbox" checked><span>S diakritikou</span></label>
 <button type="submit" class="primary">Vygenerovat text <span aria-hidden="true">↻</span></button>
+</div>
+<fieldset id="paragraph-options" class="paragraph-options">
+<legend>Nastavení odstavců</legend>
+<div class="paragraph-grid">
+<div class="slider-field">
+<label for="paragraph-length">Délka odstavců <output id="length-value" for="paragraph-length">5 vět</output></label>
+<input id="paragraph-length" name="paragraph-length" type="range" min="1" max="12" step="1" value="5" aria-describedby="paragraph-range">
+<div class="slider-scale" aria-hidden="true"><span>Krátké</span><span>Dlouhé</span></div>
+</div>
+<div class="slider-field">
+<label for="paragraph-randomness">Náhodnost délky <output id="randomness-value" for="paragraph-randomness">20 %</output></label>
+<input id="paragraph-randomness" name="paragraph-randomness" type="range" min="0" max="100" step="1" value="20" aria-describedby="paragraph-range">
+<div class="slider-scale" aria-hidden="true"><span>Stejný počet vět</span><span>Velké rozdíly</span></div>
+</div>
+<label class="check headings-check"><input id="paragraph-headings" name="paragraph-headings" type="checkbox"><span>Nadpis před každým odstavcem</span></label>
+</div>
+<p id="paragraph-range" class="paragraph-summary">Každý odstavec: 4–6 vět. Nastavení platí pro všechny odstavce.</p>
+</fieldset>
 </form>
 <div class="result-bar"><span class="result-label">TVŮJ VÝPLŇOVÝ TEXT</span><div class="actions"><button id="download" type="button" title="Stáhnout jako textový soubor">Stáhnout .txt <span aria-hidden="true">↓</span></button><button id="copy" type="button">Kopírovat text <span aria-hidden="true">⧉</span></button></div></div>
 <label for="output" class="sr-only">Vygenerovaný text, který můžeš také upravit</label>
@@ -36,7 +55,7 @@
 <section class="notes" aria-label="O generátoru"><p><span>01 / ČEŠTINA SE VŠÍM VŠUDY</span>Háčky, čárky i přirozená délka českých slov. Ať tvůj návrh obstojí i s reálným textem.</p><p><span>02 / JEN TEXT. ŽÁDNÉ OKOLKY.</span>Bez registrace a bez odesílání textu na server. Všechno vzniká přímo ve tvém prohlížeči.</p></section>
 <noscript><p class="noscript">Pro generování textu prosím povol JavaScript v prohlížeči.</p></noscript>
 </main>
-<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.0</span></span></footer>
+<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.1</span></span></footer>
 </div>
 </body>
 </html>

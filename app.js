@@ -1,4 +1,4 @@
-// České Lorem Ipsum v1.0 — generuje český výplňový text přímo v prohlížeči.
+// České Lorem Ipsum v1.1 — generuje český výplňový text přímo v prohlížeči.
 "use strict";
 const sentences = [
 "Ranní světlo pomalu proniká otevřeným oknem a kreslí jemné stíny na dřevěnou podlahu.",
@@ -46,7 +46,33 @@ function shuffledSentences() {
   }
   return pool;
 }
-function generateText(count, unit, diacritics = true) {
+// Nastavení platí společně pro všechny odstavce; délka se měří počtem vět.
+const headings = [
+  "Prostor pro nové myšlenky", "Když detaily tvoří celek",
+  "Každý den trochu jinak", "Na cestě za inspirací",
+  "Světlo mezi řádky", "Malé změny, velké možnosti",
+  "Příběhy všedních okamžiků", "V rytmu vlastních nápadů",
+  "Místo pro dobrý začátek", "Pohled z druhé strany",
+  "Klid uprostřed města", "Za hranicí první skici",
+  "Souvislosti, které dávají smysl", "Proměny známé krajiny",
+  "Od myšlenky k výsledku", "Lehkost přirozených tvarů",
+  "Nový směr na obzoru", "Zastavení mezi kroky",
+  "Pod povrchem obyčejných věcí", "Jemná rovnováha",
+  "Otevřená cesta vpřed", "Barvy každodenního života",
+  "Čas na čerstvý pohled", "Ticho za otevřeným oknem",
+  "Řád v drobných detailech", "Nápady dostávají obrysy",
+  "S lehkostí do dalšího dne", "Přirozený prostor pro změnu",
+  "Kousek světa za rohem", "Všechno má své místo"
+];
+function paragraphRange(length = 5, randomness = 20) {
+  if (!Number.isInteger(length) || length < 1 || length > 12 ||
+      !Number.isInteger(randomness) || randomness < 0 || randomness > 100) {
+    throw new Error("Neplatné nastavení délky odstavců.");
+  }
+  const spread = Math.round(length * randomness / 100);
+  return { min: Math.max(1, length - spread), max: length + spread };
+}
+function generateText(count, unit, diacritics = true, options = {}) {
   const limits = { paragraphs: 30, sentences: 100, words: 3000 };
   if (!Object.hasOwn(limits, unit)) throw new Error("Neznámá jednotka.");
   const numeric = Number(count);
@@ -55,9 +81,18 @@ function generateText(count, unit, diacritics = true) {
   const next = () => { if (!pool.length) pool = shuffledSentences(); return pool.pop(); };
   let text;
   if (unit === "paragraphs") {
-    text = Array.from({ length: numeric }, () =>
-      Array.from({ length: 4 + Math.floor(Math.random() * 3) }, next).join(" ")
-    ).join("\n\n");
+    const range = paragraphRange(options.length ?? 5, options.randomness ?? 20);
+    // Samostatně zamíchané nadpisy se v jedné dávce neopakují.
+    const titles = [...headings];
+    for (let i = titles.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [titles[i], titles[j]] = [titles[j], titles[i]];
+    }
+    text = Array.from({ length: numeric }, (_, index) => {
+      const sentenceCount = range.min + Math.floor(Math.random() * (range.max - range.min + 1));
+      const body = Array.from({ length: sentenceCount }, next).join(" ");
+      return options.headings ? titles[index] + "\n" + body : body;
+    }).join("\n\n");
   } else if (unit === "sentences") {
     text = Array.from({ length: numeric }, next).join(" ");
   } else {
@@ -84,14 +119,38 @@ if (typeof document !== "undefined") {
     byId("words-count").textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString("cs-CZ");
     byId("characters-count").textContent = Array.from(text).length.toLocaleString("cs-CZ");
   }
+  const paragraphOptions = byId("paragraph-options");
+  const lengthSlider = byId("paragraph-length");
+  const randomnessSlider = byId("paragraph-randomness");
+  const paragraphSettings = () => ({
+    length: Number(lengthSlider.value),
+    randomness: Number(randomnessSlider.value),
+    headings: byId("paragraph-headings").checked
+  });
+  const sentenceLabel = n => n === 1 ? "věta" : n <= 4 ? "věty" : "vět";
+  function updateParagraphLabels() {
+    const settings = paragraphSettings();
+    const range = paragraphRange(settings.length, settings.randomness);
+    byId("length-value").textContent = settings.length + " " + sentenceLabel(settings.length);
+    byId("randomness-value").textContent = settings.randomness + " %";
+    byId("paragraph-range").textContent = range.min === range.max
+      ? "Každý odstavec: " + range.min + " " + sentenceLabel(range.min) + ". Délka ve slovech se může lišit."
+      : "Každý odstavec: " + range.min + "–" + range.max + " vět. Nastavení platí pro všechny odstavce.";
+    lengthSlider.setAttribute("aria-valuetext", settings.length + " " + sentenceLabel(settings.length));
+    randomnessSlider.setAttribute("aria-valuetext", settings.randomness + " procent");
+  }
+  lengthSlider.addEventListener("input", updateParagraphLabels);
+  randomnessSlider.addEventListener("input", updateParagraphLabels);
   form.addEventListener("submit", event => {
     event.preventDefault();
     if (!form.reportValidity()) return;
-    output.value = generateText(Number(amount.value), unit.value, byId("diacritics").checked);
+    output.value = generateText(Number(amount.value), unit.value, byId("diacritics").checked, paragraphSettings());
     updateStats();
     announce("Nový text je připravený.");
   });
   unit.addEventListener("change", () => {
+    paragraphOptions.hidden = unit.value !== "paragraphs";
+    paragraphOptions.disabled = unit.value !== "paragraphs";
     amount.max = limits[unit.value];
     amount.value = defaults[unit.value];
     byId("limit").textContent = "1–" + limits[unit.value].toLocaleString("cs-CZ");
@@ -122,6 +181,7 @@ if (typeof document !== "undefined") {
     announce("Text je připravený ke stažení.");
   });
   output.addEventListener("input", updateStats);
-  output.value = generateText(3, "paragraphs");
+  updateParagraphLabels();
+  output.value = generateText(3, "paragraphs", true, paragraphSettings());
   updateStats();
 }
