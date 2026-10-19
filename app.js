@@ -1,4 +1,4 @@
-// České Lorem Ipsum v1.2 — generuje český výplňový text přímo v prohlížeči.
+// České Lorem Ipsum v1.3 — generuje český výplňový text přímo v prohlížeči.
 "use strict";
 const sentences = [
 "Ranní světlo pomalu proniká otevřeným oknem a kreslí jemné stíny na dřevěnou podlahu.",
@@ -90,6 +90,54 @@ function paragraphRange(length = 5, randomness = 20) {
   const spread = Math.round(length * randomness / 100);
   return { min: Math.max(1, length - spread), max: length + spread };
 }
+
+const sentenceBank = [...sentences,
+  "Ranní světlo zaplavuje tichou zahradu.",
+  "Nové nápady postupně dostávají jasné obrysy.",
+  "Každý detail má svůj význam.",
+  "Za oknem pomalu začíná den.",
+  "Čerstvý vítr příjemně ochlazuje vzduch.",
+  "Město se probouzí k životu.",
+  "Drobné změny přinášejí nové možnosti.",
+  "Na stole čeká prázdný zápisník.",
+  "Klidná cesta vede podél řeky.",
+  "Příroda nabízí prostor pro odpočinek.",
+  "Promyšlený návrh propojuje jednoduché tvary s příjemnými barvami a vytváří přehledný celek.",
+  "Každé ráno přináší nové příležitosti pro drobné změny a objevování zajímavých souvislostí.",
+  "Když se večer nad městem rozsvítí první světla, ulice postupně ztichnou a otevřená okna vpustí do pokojů příjemný chladný vzduch.",
+  "Na konci dlouhé cesty nás čeká malé náměstí, kde se mezi starými domy ukrývá tichá kavárna s několika dřevěnými stolky.",
+  "Pečlivě připravený návrh nechává dostatek prostoru důležitým informacím, přirozeně vede pozornost čtenáře a zároveň vytváří příjemnou rovnováhu mezi jednotlivými částmi obsahu.",
+  "Přestože se původní myšlenka během práce postupně proměňuje, její hlavní smysl zůstává zachován a každý nový detail pomáhá dotvářet výsledný celek."
+];
+const stripAccents = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const wordCount = text => text.trim().split(/\s+/).length;
+function sentenceBounds(size = "medium", randomness = 20) {
+  const bases = {short: 5, medium: 12, long: 20};
+  if (!Object.hasOwn(bases, size) || !Number.isInteger(randomness) || randomness < 0 || randomness > 100)
+    throw new Error("Neplatné nastavení vět.");
+  const base = bases[size], spread = Math.round(base * randomness / 100);
+  return {min: Math.max(3, base - spread), max: Math.min(30, base + spread)};
+}
+function sentenceCandidates(target) {
+  const distance = Math.min(...sentenceBank.map(s => Math.abs(wordCount(s) - target)));
+  return sentenceBank.filter(s => Math.abs(wordCount(s) - target) === distance);
+}
+function wordPool(size = "mix", diacritics = true) {
+  if (!["short","medium","long","mix"].includes(size)) throw new Error("Neplatná délka slov.");
+  const source = [...sentenceBank, ...headings, ...listItems].join(" ").toLocaleLowerCase("cs-CZ");
+  const normalized = diacritics ? source : stripAccents(source);
+  return [...new Set(normalized.match(/\p{L}+/gu))].filter(w =>
+    size === "mix" || (size === "short" ? w.length <= 4 : size === "medium" ? w.length >= 5 && w.length <= 8 : w.length >= 9));
+}
+function shuffled(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 function generateText(count, unit, diacritics = true, options = {}) {
   const limits = { paragraphs: 30, sentences: 100, words: 3000 };
   if (!Object.hasOwn(limits, unit)) throw new Error("Neznámá jednotka.");
@@ -129,11 +177,34 @@ function generateText(count, unit, diacritics = true, options = {}) {
       return parts.join("\n");
     }).join("\n\n");
   } else if (unit === "sentences") {
-    text = Array.from({ length: numeric }, next).join(" ");
+    const bounds = sentenceBounds(options.sentenceLength ?? "medium", options.sentenceRandomness ?? 20);
+    const endings = {period: ".", question: "?", exclamation: "!"};
+    const ending = options.ending ?? "period";
+    if (ending !== "random" && !Object.hasOwn(endings, ending)) throw new Error("Neplatné zakončení vět.");
+    text = Array.from({length: numeric}, () => {
+      const target = bounds.min + Math.floor(Math.random() * (bounds.max - bounds.min + 1));
+      const candidates = sentenceCandidates(target);
+      const sentence = candidates[Math.floor(Math.random() * candidates.length)];
+      const punctuation = ending === "random" ? [".","?","!"][Math.floor(Math.random() * 3)] : endings[ending];
+      return sentence.replace(/[.!?]+$/, "") + punctuation;
+    }).join(options.sentenceLines ? "\n" : " ");
   } else {
-    const words = [];
-    while (words.length < numeric) words.push(...next().split(/\s+/));
-    text = words.slice(0, numeric).join(" ").replace(/[.,;:!?]+$/, "") + ".";
+    const pool = wordPool(options.wordLength ?? "mix", diacritics);
+    const repeat = options.repeat ?? true;
+    const casing = options.casing ?? "normal";
+    const separators = {space: " ", comma: ", ", newline: "\n"};
+    const separator = options.separator ?? "space";
+    if (!["normal","upper","lower","title"].includes(casing) || !Object.hasOwn(separators, separator))
+      throw new Error("Neplatné nastavení slov.");
+    if (!repeat && numeric > pool.length) throw new Error("Bez opakování je dostupných nejvýše " + pool.length + " slov. Sniž počet nebo povol opakování.");
+    const unique = repeat ? [] : shuffled(pool);
+    const words = Array.from({length: numeric}, (_, i) => {
+      const word = repeat ? pool[Math.floor(Math.random() * pool.length)] : unique[i];
+      if (casing === "upper") return word.toLocaleUpperCase("cs-CZ");
+      if (casing === "title" || (casing === "normal" && i === 0)) return word[0].toLocaleUpperCase("cs-CZ") + word.slice(1);
+      return word;
+    });
+    text = words.join(separators[separator]);
   }
   return diacritics ? text : text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
@@ -165,6 +236,44 @@ if (typeof document !== "undefined") {
     listType: form.querySelector('input[name="paragraph-list"]:checked').value,
     itemCount: Number(byId("list-count").value)
   });
+  const sentenceSettings = () => ({
+    sentenceLength: byId("sentence-length").value,
+    sentenceRandomness: Number(byId("sentence-randomness").value),
+    ending: byId("sentence-ending").value,
+    sentenceLines: byId("sentence-lines").checked
+  });
+  const wordSettings = () => ({
+    wordLength: byId("word-length").value,
+    casing: byId("word-case").value,
+    separator: byId("word-separator").value,
+    repeat: byId("word-repeat").checked
+  });
+  function updateSentenceLabels() {
+    const settings = sentenceSettings();
+    const bounds = sentenceBounds(settings.sentenceLength, settings.sentenceRandomness);
+    const lengths = [];
+    for (let target = bounds.min; target <= bounds.max; target++) {
+      lengths.push(...sentenceCandidates(target).map(wordCount));
+    }
+    const min = Math.min(...lengths), max = Math.max(...lengths);
+    byId("sentence-randomness-value").textContent = settings.sentenceRandomness + " %";
+    byId("sentence-summary").textContent = min === max ? "Každá věta: " + min + " slov." : "Délka vět: " + min + "–" + max + " slov.";
+    byId("sentence-randomness").setAttribute("aria-valuetext", settings.sentenceRandomness + " procent");
+  }
+  function updateWordLimit() {
+    const settings = wordSettings();
+    const capacity = wordPool(settings.wordLength, byId("diacritics").checked).length;
+    const max = settings.repeat ? limits.words : Math.min(limits.words, capacity);
+    byId("word-summary").textContent = settings.repeat
+      ? "Zásoba: " + capacity + " různých slov. Opakování je povoleno."
+      : "Bez opakování: nejvýše " + max + " slov v této délce.";
+    if (unit.value === "words") {
+      amount.max = max;
+      byId("limit").textContent = "1–" + max.toLocaleString("cs-CZ");
+    }
+  }
+  ["sentence-length","sentence-randomness"].forEach(id => byId(id).addEventListener("input", updateSentenceLabels));
+  ["word-length","word-repeat","diacritics"].forEach(id => byId(id).addEventListener("change", updateWordLimit));
   const sentenceLabel = n => n === 1 ? "věta" : n <= 4 ? "věty" : "vět";
   function updateParagraphLabels() {
     const settings = paragraphSettings();
@@ -190,16 +299,26 @@ if (typeof document !== "undefined") {
   form.addEventListener("submit", event => {
     event.preventDefault();
     if (!form.reportValidity()) return;
-    output.value = generateText(Number(amount.value), unit.value, byId("diacritics").checked, paragraphSettings());
+    try {
+      const options = unit.value === "paragraphs" ? paragraphSettings() : unit.value === "sentences" ? sentenceSettings() : wordSettings();
+      output.value = generateText(Number(amount.value), unit.value, byId("diacritics").checked, options);
+    } catch (error) {
+      announce(error.message);
+      return;
+    }
     updateStats();
     announce("Nový text je připravený.");
   });
   unit.addEventListener("change", () => {
-    paragraphOptions.hidden = unit.value !== "paragraphs";
-    paragraphOptions.disabled = unit.value !== "paragraphs";
+    ["paragraphs","sentences","words"].forEach((mode, i) => {
+      const panel = byId(["paragraph-options","sentence-options","word-options"][i]);
+      panel.hidden = unit.value !== mode;
+      panel.disabled = unit.value !== mode;
+    });
     amount.max = limits[unit.value];
     amount.value = defaults[unit.value];
     byId("limit").textContent = "1–" + limits[unit.value].toLocaleString("cs-CZ");
+    updateWordLimit();
   });
   byId("copy").addEventListener("click", async () => {
     if (!output.value) return announce("Nejdřív vygeneruj text.");
@@ -229,6 +348,8 @@ if (typeof document !== "undefined") {
   output.addEventListener("input", updateStats);
   updateParagraphLabels();
   updateListControls();
+  updateSentenceLabels();
+  updateWordLimit();
   output.value = generateText(3, "paragraphs", true, paragraphSettings());
   updateStats();
 }
