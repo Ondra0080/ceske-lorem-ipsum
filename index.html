@@ -1,0 +1,42 @@
+<!doctype html>
+<!-- České Lorem Ipsum v1.0 — samostatný generátor českého výplňového textu. -->
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Český Lorem Ipsum generátor s diakritikou. Výplňový text pro grafické návrhy, weby a sazbu. Vygenerujte odstavce, věty nebo přesný počet slov.">
+<meta name="theme-color" content="#f5f3ed">
+<title>České Lorem Ipsum — výplňový text s háčky a čárkami</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c94727'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='serif' font-size='48' fill='white'%3Eč%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="page">
+<header class="topbar"><a class="brand" href="./" aria-label="České Lorem Ipsum, úvod"><span class="mark" aria-hidden="true">č.</span> Nástroj pro dobré návrhy</a><a class="source" href="https://github.com/Ondra0080/ceske-lorem-ipsum" target="_blank" rel="noopener noreferrer">GitHub ↗</a></header>
+<main>
+<section class="intro">
+<p class="eyebrow">MÍSTO PRO TVOJE MYŠLENKY</p>
+<h1>Lorem ipsum.<br><span>Po česku.</span></h1>
+<p class="lead">Výplňový text, který má všechny háčky.<br>Pro sazbu, weby i nápady, které teprve přijdou.</p>
+<div class="diacritic-art" aria-hidden="true">Aa<span>á</span><small>č ď ě ň ř š ť ů ž</small></div>
+</section>
+<section class="workspace" aria-label="Generátor českého textu">
+<form id="generator" class="controls">
+<div class="field amount-field"><label for="amount">Kolik textu?</label><input id="amount" name="amount" type="number" min="1" max="30" step="1" value="3" required aria-describedby="limit"><span id="limit" class="hint">1–30</span></div>
+<div class="field"><label for="unit">Jednotka</label><select id="unit" name="unit"><option value="paragraphs">Odstavce</option><option value="sentences">Věty</option><option value="words">Slova</option></select></div>
+<label class="check"><input id="diacritics" type="checkbox" checked><span>S diakritikou</span></label>
+<button type="submit" class="primary">Vygenerovat text <span aria-hidden="true">↻</span></button>
+</form>
+<div class="result-bar"><span class="result-label">TVŮJ VÝPLŇOVÝ TEXT</span><div class="actions"><button id="download" type="button" title="Stáhnout jako textový soubor">Stáhnout .txt <span aria-hidden="true">↓</span></button><button id="copy" type="button">Kopírovat text <span aria-hidden="true">⧉</span></button></div></div>
+<label for="output" class="sr-only">Vygenerovaný text, který můžeš také upravit</label>
+<textarea id="output" spellcheck="false" placeholder="Tady se objeví tvůj text."></textarea>
+<div class="result-footer"><p class="stats"><span id="words-count">0</span> slov <span class="dot">·</span> <span id="characters-count">0</span> znaků včetně mezer</p><p id="status" role="status" aria-live="polite">Připraveno ke kopírování.</p></div>
+</section>
+<section class="notes" aria-label="O generátoru"><p><span>01 / ČEŠTINA SE VŠÍM VŠUDY</span>Háčky, čárky i přirozená délka českých slov. Ať tvůj návrh obstojí i s reálným textem.</p><p><span>02 / JEN TEXT. ŽÁDNÉ OKOLKY.</span>Bez registrace a bez odesílání textu na server. Všechno vzniká přímo ve tvém prohlížeči.</p></section>
+<noscript><p class="noscript">Pro generování textu prosím povol JavaScript v prohlížeči.</p></noscript>
+</main>
+<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.0</span></span></footer>
+</div>
+</body>
+</html>
