@@ -1,4 +1,4 @@
-// České Lorem Ipsum v1.3 — generuje český výplňový text přímo v prohlížeči.
+// České Lorem Ipsum v1.4 — generuje český výplňový text přímo v prohlížeči.
 "use strict";
 const sentences = [
 "Ranní světlo pomalu proniká otevřeným oknem a kreslí jemné stíny na dřevěnou podlahu.",
@@ -92,6 +92,17 @@ function paragraphRange(length = 5, randomness = 20) {
 }
 
 const sentenceBank = [...sentences,
+  "Každý nový nápad potřebuje dostatek času a prostoru pro rozvoj.",
+  "Po pracovním dni se rádi vracíme do klidné zahrady, kde nás čeká příjemný stín pod rozložitými korunami stromů.",
+  "Město tiše odpočívá.",
+  "Světlo pomalu zaplavuje zahradu.",
+  "Jemné ranní světlo pomalu proniká do pokoje.",
+  "Za otevřeným oknem se pomalu probouzí nový den.",
+  "Na kraji města začíná tichá cesta mezi vysokými stromy.",
+  "Každý nový nápad potřebuje dostatek času a prostor pro další rozvoj.",
+  "Jemné světlo za oknem postupně odhaluje drobné detaily na povrchu dřevěného stolu.",
+  "Po dlouhém pracovním dni se rádi vracíme do klidné zahrady, kde nás čeká příjemný stín pod rozložitými korunami stromů.",
+  "Na konci úzké lesní cesty se před námi otevírá malá paseka, kterou ranní slunce pomalu zalévá jemným a teplým světlem.",
   "Ranní světlo zaplavuje tichou zahradu.",
   "Nové nápady postupně dostávají jasné obrysy.",
   "Každý detail má svůj význam.",
@@ -111,11 +122,11 @@ const sentenceBank = [...sentences,
 ];
 const stripAccents = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const wordCount = text => text.trim().split(/\s+/).length;
-function sentenceBounds(size = "medium", randomness = 20) {
-  const bases = {short: 5, medium: 12, long: 20};
-  if (!Object.hasOwn(bases, size) || !Number.isInteger(randomness) || randomness < 0 || randomness > 100)
+function sentenceBounds(length = 12, randomness = 20) {
+  if (!Number.isInteger(length) || length < 5 || length > 20 ||
+      !Number.isInteger(randomness) || randomness < 0 || randomness > 100)
     throw new Error("Neplatné nastavení vět.");
-  const base = bases[size], spread = Math.round(base * randomness / 100);
+  const base = length, spread = Math.round(base * randomness / 100);
   return {min: Math.max(3, base - spread), max: Math.min(30, base + spread)};
 }
 function sentenceCandidates(target) {
@@ -177,7 +188,7 @@ function generateText(count, unit, diacritics = true, options = {}) {
       return parts.join("\n");
     }).join("\n\n");
   } else if (unit === "sentences") {
-    const bounds = sentenceBounds(options.sentenceLength ?? "medium", options.sentenceRandomness ?? 20);
+    const bounds = sentenceBounds(options.sentenceLength ?? 12, options.sentenceRandomness ?? 20);
     const endings = {period: ".", question: "?", exclamation: "!"};
     const ending = options.ending ?? "period";
     if (ending !== "random" && !Object.hasOwn(endings, ending)) throw new Error("Neplatné zakončení vět.");
@@ -237,7 +248,7 @@ if (typeof document !== "undefined") {
     itemCount: Number(byId("list-count").value)
   });
   const sentenceSettings = () => ({
-    sentenceLength: byId("sentence-length").value,
+    sentenceLength: Number(byId("sentence-length").value),
     sentenceRandomness: Number(byId("sentence-randomness").value),
     ending: byId("sentence-ending").value,
     sentenceLines: byId("sentence-lines").checked
@@ -256,6 +267,8 @@ if (typeof document !== "undefined") {
       lengths.push(...sentenceCandidates(target).map(wordCount));
     }
     const min = Math.min(...lengths), max = Math.max(...lengths);
+    byId("sentence-length-value").textContent = settings.sentenceLength + " slov";
+    byId("sentence-length").setAttribute("aria-valuetext", settings.sentenceLength + " slov");
     byId("sentence-randomness-value").textContent = settings.sentenceRandomness + " %";
     byId("sentence-summary").textContent = min === max ? "Každá věta: " + min + " slov." : "Délka vět: " + min + "–" + max + " slov.";
     byId("sentence-randomness").setAttribute("aria-valuetext", settings.sentenceRandomness + " procent");

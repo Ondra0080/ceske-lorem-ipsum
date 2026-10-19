@@ -1,4 +1,4 @@
-/* České Lorem Ipsum v1.3 — responzivní sazba a kompaktní režim pro iframe. */
+/* České Lorem Ipsum v1.4 — responzivní sazba a kompaktní režim pro iframe. */
 :root{color-scheme:light;--paper:#f5f3ed;--ink:#252923;--muted:#686b62;--line:#dcded3;--accent:#ba4326;--white:#fffefa}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}

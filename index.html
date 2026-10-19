@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- České Lorem Ipsum v1.3 — samostatný generátor českého výplňového textu. -->
+<!-- České Lorem Ipsum v1.4 — samostatný generátor českého výplňového textu. -->
 <html lang="cs">
 <head>
 <meta charset="utf-8">
@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#f5f3ed">
 <title>České Lorem Ipsum — výplňový text s háčky a čárkami</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c94727'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='serif' font-size='48' fill='white'%3Eč%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=1.3">
-<script src="app.js?v=1.3" defer></script>
+<link rel="stylesheet" href="style.css?v=1.4">
+<script src="app.js?v=1.4" defer></script>
 </head>
 <body>
 <div class="page">
@@ -68,7 +68,11 @@
 <fieldset id="sentence-options" class="paragraph-options" hidden disabled>
 <legend>Nastavení vět</legend>
 <div class="paragraph-grid">
-<div class="field"><label for="sentence-length">Délka věty</label><select id="sentence-length"><option value="short">Krátká</option><option value="medium" selected>Střední</option><option value="long">Dlouhá</option></select></div>
+<div class="slider-field">
+<label for="sentence-length">Délka věty <output id="sentence-length-value" for="sentence-length">12 slov</output></label>
+<input id="sentence-length" type="range" min="5" max="20" step="1" value="12" aria-describedby="sentence-summary">
+<div class="slider-scale" aria-hidden="true"><span>Krátká · 5 slov</span><span>Dlouhá · 20 slov</span></div>
+</div>
 <div class="slider-field"><label for="sentence-randomness">Náhodnost délky <output id="sentence-randomness-value" for="sentence-randomness">20 %</output></label><input id="sentence-randomness" type="range" min="0" max="100" step="1" value="20" aria-describedby="sentence-summary"><div class="slider-scale" aria-hidden="true"><span>Stejný počet slov</span><span>Velké rozdíly</span></div></div>
 <div class="field"><label for="sentence-ending">Zakončení vět</label><select id="sentence-ending"><option value="period">Tečka .</option><option value="question">Otazník ?</option><option value="exclamation">Vykřičník !</option><option value="random">Náhodně . ? !</option></select></div>
 <label class="check mode-check"><input id="sentence-lines" type="checkbox"><span>Každá věta na samostatném řádku</span></label>
@@ -94,7 +98,7 @@
 <section class="notes" aria-label="O generátoru"><p><span>01 / ČEŠTINA SE VŠÍM VŠUDY</span>Háčky, čárky i přirozená délka českých slov. Ať tvůj návrh obstojí i s reálným textem.</p><p><span>02 / JEN TEXT. ŽÁDNÉ OKOLKY.</span>Bez registrace a bez odesílání textu na server. Všechno vzniká přímo ve tvém prohlížeči.</p></section>
 <noscript><p class="noscript">Pro generování textu prosím povol JavaScript v prohlížeči.</p></noscript>
 </main>
-<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.3</span></span></footer>
+<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.4</span></span></footer>
 </div>
 </body>
 </html>
