@@ -1,4 +1,4 @@
-// České Lorem Ipsum v1.5 — generuje český výplňový text přímo v prohlížeči.
+// České Lorem Ipsum v1.6.0 — generuje český výplňový text přímo v prohlížeči.
 "use strict";
 const sentences = [
 "Ranní světlo pomalu proniká otevřeným oknem a kreslí jemné stíny na dřevěnou podlahu.",
@@ -234,7 +234,31 @@ if (typeof document !== "undefined") {
   const embedded = new URLSearchParams(location.search).get("embed") === "1";
   document.body.classList.toggle("embedded", embedded);
   const announce = message => { status.textContent = message; };
+  let previewHasHeadings = false;
+  function renderPreview() {
+    const preview = byId("preview");
+    preview.replaceChildren();
+    output.value.split(/\n\n/).forEach(block => {
+      let list = null;
+      block.split("\n").forEach((line, index) => {
+        const numbered = /^\d+\. /.test(line);
+        const bullet = line.startsWith("• ");
+        if (numbered || bullet) {
+          const tag = numbered ? "OL" : "UL";
+          if (!list || list.tagName !== tag) { list = document.createElement(tag); preview.append(list); }
+          const item = document.createElement("li");
+          item.textContent = line.replace(/^(?:• |\d+\. )/, ""); list.append(item);
+        } else {
+          list = null;
+          const node = document.createElement(previewHasHeadings && index === 0 ? "h3" : "p");
+          if (!previewHasHeadings && block.includes("\n")) node.className = "preview-line";
+          node.textContent = line; preview.append(node);
+        }
+      });
+    });
+  }
   function updateStats() {
+    renderPreview();
     const text = output.value;
     const wordsOnly = text.replace(/^(?:• |\d+\. )/gm, "").trim();
     byId("words-count").textContent = (wordsOnly ? wordsOnly.split(/\s+/).length : 0).toLocaleString("cs-CZ");
@@ -324,6 +348,7 @@ if (typeof document !== "undefined") {
     if (!form.reportValidity()) return;
     try {
       const options = unit.value === "paragraphs" ? paragraphSettings() : unit.value === "sentences" ? sentenceSettings() : wordSettings();
+      previewHasHeadings = unit.value === "paragraphs" && paragraphSettings().headings;
       output.value = generateText(Number(amount.value), unit.value, byId("diacritics").checked, options);
     } catch (error) {
       announce(error.message);
@@ -342,6 +367,8 @@ if (typeof document !== "undefined") {
     amount.value = defaults[unit.value];
     byId("limit").textContent = "1–" + limits[unit.value].toLocaleString("cs-CZ");
     updateWordLimit();
+    byId("amount-label").textContent = {paragraphs:"Počet odstavců", sentences:"Počet vět", words:"Počet slov"}[unit.value];
+    document.querySelectorAll("[data-mode]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.mode === unit.value)));
   });
   byId("copy").addEventListener("click", async () => {
     if (!output.value) return announce("Nejdřív vygeneruj text.");
@@ -349,6 +376,7 @@ if (typeof document !== "undefined") {
       await navigator.clipboard.writeText(output.value);
       announce("Text byl zkopírován do schránky.");
     } catch {
+      setEditing(true);
       output.focus();
       output.select();
       try {
@@ -368,6 +396,62 @@ if (typeof document !== "undefined") {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     announce("Text je připravený ke stažení.");
   });
+
+  function setEditing(editing) {
+    output.hidden = !editing;
+    byId("preview").hidden = editing;
+    byId("edit").textContent = editing ? "Zobrazit náhled" : "Upravit text";
+    byId("edit").setAttribute("aria-pressed", String(editing));
+  }
+  byId("edit").addEventListener("click", () => { setEditing(output.hidden); if (!output.hidden) output.focus(); });
+  document.querySelectorAll("[data-mode]").forEach(button => button.addEventListener("click", () => {
+    unit.value = button.dataset.mode;
+    unit.dispatchEvent(new Event("change"));
+  }));
+  const modeAmounts = {paragraphs:3, sentences:5, words:100};
+  let previousMode = unit.value;
+  unit.addEventListener("change", () => {
+    // Keep each mode's quantity when switching between panels.
+    previousMode = unit.value;
+    amount.value = Math.min(Number(amount.max), modeAmounts[unit.value]);
+  });
+  amount.addEventListener("input", () => { if (amount.validity.valid) modeAmounts[previousMode] = Number(amount.value); });
+  document.querySelectorAll("[data-step]").forEach(button => button.addEventListener("click", () => {
+    if (Number(button.dataset.step) > 0) amount.stepUp(); else amount.stepDown();
+    amount.dispatchEvent(new Event("input", {bubbles:true}));
+  }));
+  function paintRange(slider) {
+    const percent = (Number(slider.value) - Number(slider.min)) / (Number(slider.max) - Number(slider.min)) * 100;
+    slider.style.setProperty("--fill", percent + "%");
+  }
+  document.querySelectorAll('input[type="range"]').forEach(slider => {
+    const number = byId(slider.id + "-number");
+    slider.addEventListener("input", () => { number.value = slider.value; paintRange(slider); });
+    number.addEventListener("input", () => {
+      if (!number.validity.valid || !number.value) return;
+      slider.value = number.value;
+      slider.dispatchEvent(new Event("input", {bubbles:true}));
+    });
+    number.addEventListener("blur", () => { if (!number.validity.valid || !number.value) number.value = slider.value; });
+    paintRange(slider);
+  });
+  const preference = matchMedia("(prefers-color-scheme: dark)");
+  let theme = "system";
+  try { const saved = localStorage.getItem("czech-lorem-theme"); if (["light","dark","system"].includes(saved)) theme = saved; } catch {}
+  function applyTheme() {
+    const resolved = theme === "system" ? (preference.matches ? "dark" : "light") : theme;
+    document.documentElement.dataset.theme = resolved;
+    document.querySelector('meta[name="theme-color"]').content = resolved === "dark" ? "#111827" : "#f4f7fc";
+    document.querySelectorAll("[data-theme-choice]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme)));
+  }
+  document.querySelectorAll("[data-theme-choice]").forEach(button => button.addEventListener("click", () => {
+    theme = button.dataset.themeChoice;
+    try { localStorage.setItem("czech-lorem-theme", theme); } catch {}
+    applyTheme();
+  }));
+  preference.addEventListener("change", applyTheme);
+  applyTheme();
+
   output.addEventListener("input", updateStats);
   updateParagraphLabels();
   updateListControls();
@@ -377,3 +461,4 @@ if (typeof document !== "undefined") {
   output.value = generateText(3, "paragraphs", true, paragraphSettings());
   updateStats();
 }
+

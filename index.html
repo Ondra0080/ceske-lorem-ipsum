@@ -1,45 +1,38 @@
 <!doctype html>
-<!-- České Lorem Ipsum v1.5 — samostatný generátor českého výplňového textu. -->
+<!-- České Lorem Ipsum v1.6.0 — samostatný generátor českého výplňového textu. -->
 <html lang="cs">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Český Lorem Ipsum generátor s diakritikou. Výplňový text pro grafické návrhy, weby a sazbu. Vygenerujte odstavce, věty nebo přesný počet slov.">
-<meta name="theme-color" content="#f5f3ed">
+<meta name="theme-color" content="#f4f7fc">
 <title>České Lorem Ipsum — výplňový text s háčky a čárkami</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c94727'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='serif' font-size='48' fill='white'%3Eč%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232475ff'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='serif' font-size='48' fill='white'%3Eč%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css?v=1.5">
 <script src="app.js?v=1.5" defer></script>
 </head>
 <body>
-<div class="page">
-<header class="topbar"><a class="brand" href="./" aria-label="České Lorem Ipsum, úvod"><span class="mark" aria-hidden="true">č.</span> Nástroj pro dobré návrhy</a><a class="source" href="https://github.com/Ondra0080/ceske-lorem-ipsum" target="_blank" rel="noopener noreferrer">GitHub ↗</a></header>
-<main>
-<section class="intro">
-<p class="eyebrow">MÍSTO PRO TVOJE MYŠLENKY</p>
-<h1>Lorem ipsum.<br><span>Po česku.</span></h1>
-<p class="lead">Výplňový text, který má všechny háčky.<br>Pro sazbu, weby i nápady, které teprve přijdou.</p>
-<div class="diacritic-art" aria-hidden="true">Aa<span>á</span><small>č ď ě ň ř š ť ů ž</small></div>
-</section>
-<section class="workspace" aria-label="Generátor českého textu">
-<form id="generator">
+<div class="app-shell">
+<aside class="sidebar"><a class="brand" href="./"><span class="brand-mark">č</span><h1>České<br> Lorem Ipsum</h1></a><p class="tagline">Výplňový text s diakritikou<br>pro návrhy a prototypy.</p>
+<nav class="mode-nav" aria-label="Režim generování"><button type="button" data-mode="paragraphs" aria-pressed="true"><span aria-hidden="true">¶</span> Odstavce</button><button type="button" data-mode="sentences" aria-pressed="false"><span aria-hidden="true">≡</span> Věty</button><button type="button" data-mode="words" aria-pressed="false"><span aria-hidden="true">Aa</span> Slova</button></nav>
+<div class="sidebar-bottom"><p>Bez registrace. Text vzniká přímo ve vašem prohlížeči.</p><a href="https://github.com/Ondra0080/ceske-lorem-ipsum" target="_blank" rel="noopener noreferrer">GitHub ↗</a><span class="version">Verze 1.6.0</span></div></aside>
+<header class="app-header"><span>Český výplňový text</span><div class="theme-switch" role="group" aria-label="Vzhled aplikace"><button type="button" data-theme-choice="light" aria-pressed="false">☀ <span>Světlý</span></button><button type="button" data-theme-choice="dark" aria-pressed="false">☾ <span>Tmavý</span></button><button type="button" data-theme-choice="system" aria-pressed="true">▣ <span>Systém</span></button></div></header>
+<main class="workspace" aria-label="Generátor českého textu"><section class="inspector" aria-label="Nastavení textu"><form id="generator">
 <div class="controls">
-<div class="field amount-field"><label for="amount">Kolik textu?</label><input id="amount" name="amount" type="number" min="1" max="30" step="1" value="3" required aria-describedby="limit"><span id="limit" class="hint">1–30</span></div>
-<div class="field"><label for="unit">Jednotka</label><select id="unit" name="unit"><option value="paragraphs">Odstavce</option><option value="sentences">Věty</option><option value="words">Slova</option></select></div>
-<label class="check"><input id="diacritics" type="checkbox" checked><span>S diakritikou</span></label>
-<button type="submit" class="primary">Vygenerovat text <span aria-hidden="true">↻</span></button>
+<div class="field amount-field"><label id="amount-label" for="amount">Počet odstavců</label><div class="stepper"><button type="button" data-step="-1" aria-label="Snížit počet">−</button><input id="amount" name="amount" type="number" min="1" max="30" value="3" required aria-describedby="limit"><button type="button" data-step="1" aria-label="Zvýšit počet">+</button></div><span id="limit" class="hint">1–30</span></div>
+<label class="sr-only" for="unit">Režim generování</label><select id="unit" hidden><option value="paragraphs">Odstavce</option><option value="sentences">Věty</option><option value="words">Slova</option></select>
 </div>
 <fieldset id="paragraph-options" class="paragraph-options">
 <legend>Nastavení odstavců</legend>
 <div class="paragraph-grid">
 <div class="slider-field">
 <label for="paragraph-length">Délka jednoho odstavce <output id="length-value" for="paragraph-length">5 vět</output></label>
-<input id="paragraph-length" name="paragraph-length" type="range" min="1" max="12" step="1" value="5" aria-describedby="paragraph-range">
+<div class="range-row"><input id="paragraph-length" name="paragraph-length" type="range" min="1" max="12" step="1" value="5" aria-describedby="paragraph-range"><input id="paragraph-length-number" class="range-number" type="number" min="1" max="12" value="5" step="1" aria-label="Počet vět v odstavci — přesná hodnota" required></div>
 <div class="slider-scale" aria-hidden="true"><span>Krátké</span><span>Dlouhé</span></div>
 </div>
 <div class="slider-field">
-<label for="paragraph-randomness">Náhodnost délky <output id="randomness-value" for="paragraph-randomness">20 %</output></label>
-<input id="paragraph-randomness" name="paragraph-randomness" type="range" min="0" max="100" step="1" value="20" aria-describedby="paragraph-range">
+<label for="paragraph-randomness">Náhodnost délky odstavců <output id="randomness-value" for="paragraph-randomness">20 %</output></label>
+<div class="range-row"><input id="paragraph-randomness" name="paragraph-randomness" type="range" min="0" max="100" step="1" value="20" aria-describedby="paragraph-range"><input id="paragraph-randomness-number" class="range-number" type="number" min="0" max="100" value="20" step="1" aria-label="Náhodnost délky odstavců — přesná hodnota" required></div>
 <div class="slider-scale" aria-hidden="true"><span>Stejný počet vět</span><span>Velké rozdíly</span></div>
 </div>
 <fieldset class="option-group heading-group">
@@ -54,7 +47,7 @@
 <div class="segments">
 <label><input type="radio" name="paragraph-list" value="none" checked><span>Bez seznamu</span></label>
 <label><input type="radio" name="paragraph-list" value="bullets"><span>Odrážky</span></label>
-<label><input type="radio" name="paragraph-list" value="numbered"><span>Číslované body</span></label>
+<label><input type="radio" name="paragraph-list" value="numbered"><span>Číslování</span></label>
 </div>
 <div id="list-count-field" class="list-count-field" hidden>
 <label for="list-count">Počet položek</label>
@@ -70,10 +63,10 @@
 <div class="paragraph-grid">
 <div class="slider-field">
 <label for="sentence-length">Délka věty <output id="sentence-length-value" for="sentence-length">12 slov</output></label>
-<input id="sentence-length" type="range" min="5" max="20" step="1" value="12" aria-describedby="sentence-summary">
+<div class="range-row"><input id="sentence-length" type="range" min="5" max="20" step="1" value="12" aria-describedby="sentence-summary"><input id="sentence-length-number" class="range-number" type="number" min="5" max="20" value="12" step="1" aria-label="Počet slov ve větě — přesná hodnota" required></div>
 <div class="slider-scale" aria-hidden="true"><span>Krátká · 5 slov</span><span>Dlouhá · 20 slov</span></div>
 </div>
-<div class="slider-field"><label for="sentence-randomness">Náhodnost délky <output id="sentence-randomness-value" for="sentence-randomness">20 %</output></label><input id="sentence-randomness" type="range" min="0" max="100" step="1" value="20" aria-describedby="sentence-summary"><div class="slider-scale" aria-hidden="true"><span>Stejný počet slov</span><span>Velké rozdíly</span></div></div>
+<div class="slider-field"><label for="sentence-randomness">Náhodnost délky <output id="sentence-randomness-value" for="sentence-randomness">20 %</output></label><div class="range-row"><input id="sentence-randomness" type="range" min="0" max="100" step="1" value="20" aria-describedby="sentence-summary"><input id="sentence-randomness-number" class="range-number" type="number" min="0" max="100" value="20" step="1" aria-label="Náhodnost délky vět — přesná hodnota" required></div><div class="slider-scale" aria-hidden="true"><span>Stejný počet slov</span><span>Velké rozdíly</span></div></div>
 <div class="field"><label for="sentence-ending">Zakončení vět</label><select id="sentence-ending"><option value="period">Tečka .</option><option value="question">Otazník ?</option><option value="exclamation">Vykřičník !</option><option value="random">Náhodně . ? !</option></select></div>
 <label class="check mode-check"><input id="sentence-lines" type="checkbox"><span>Každá věta na samostatném řádku</span></label>
 <fieldset id="sentence-list-options" class="option-group list-group" hidden disabled>
@@ -97,16 +90,9 @@
 </div>
 <p id="word-summary" class="paragraph-summary" aria-live="polite"></p>
 </fieldset>
-</form>
-<div class="result-bar"><span class="result-label">TVŮJ VÝPLŇOVÝ TEXT</span><div class="actions"><button id="download" type="button" title="Stáhnout jako textový soubor">Stáhnout .txt <span aria-hidden="true">↓</span></button><button id="copy" type="button">Kopírovat text <span aria-hidden="true">⧉</span></button></div></div>
-<label for="output" class="sr-only">Vygenerovaný text, který můžeš také upravit</label>
-<textarea id="output" spellcheck="false" placeholder="Tady se objeví tvůj text."></textarea>
-<div class="result-footer"><p class="stats"><span id="words-count">0</span> slov <span class="dot">·</span> <span id="characters-count">0</span> znaků včetně mezer</p><p id="status" role="status" aria-live="polite">Připraveno ke kopírování.</p></div>
-</section>
-<section class="notes" aria-label="O generátoru"><p><span>01 / ČEŠTINA SE VŠÍM VŠUDY</span>Háčky, čárky i přirozená délka českých slov. Ať tvůj návrh obstojí i s reálným textem.</p><p><span>02 / JEN TEXT. ŽÁDNÉ OKOLKY.</span>Bez registrace a bez odesílání textu na server. Všechno vzniká přímo ve tvém prohlížeči.</p></section>
-<noscript><p class="noscript">Pro generování textu prosím povol JavaScript v prohlížeči.</p></noscript>
-</main>
-<footer class="site-footer"><a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio ↗</a><span>České Lorem Ipsum <span class="version">v1.5</span></span></footer>
-</div>
-</body>
-</html>
+<div class="generate-area"><label class="check"><input id="diacritics" type="checkbox" checked><span>Česká diakritika</span></label><button type="submit" class="primary">Generovat text <span aria-hidden="true">↻</span></button></div></form></section>
+<section class="result" aria-label="Výsledek"><div class="result-toolbar"><h2>Vygenerovaný text</h2><div class="actions"><button id="edit" type="button" aria-pressed="false">Upravit text</button><button id="copy" type="button" class="primary">Kopírovat</button><button id="download" type="button">Stáhnout TXT</button></div></div>
+<div class="paper"><div id="preview" class="preview" aria-label="Náhled vygenerovaného textu"></div><label for="output" class="sr-only">Vygenerovaný text k úpravě</label><textarea id="output" spellcheck="false" hidden></textarea></div>
+<div class="result-footer"><p><span id="words-count">0</span> slov <span class="dot">·</span> <span id="characters-count">0</span> znaků včetně mezer</p><p id="status" role="status" aria-live="polite">Připraveno.</p></div>
+<footer class="site-footer">Vytvořeno ChatGPT pro <a href="https://bahulastudio.cz" target="_blank" rel="noopener noreferrer">Bahula Studio</a>.</footer></section></main></div>
+<noscript>Pro generování textu povolte JavaScript v prohlížeči.</noscript></body></html>

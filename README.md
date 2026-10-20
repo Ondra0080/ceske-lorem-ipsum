@@ -1,10 +1,30 @@
 # České Lorem Ipsum
 
-**Verze 1.5**
+**Aktuální verze: 1.6.0**
 
 Generátor českého výplňového textu pro grafické návrhy, sazbu a weby. Text vzniká náhodným skládáním předem připravených českých vět přímo v prohlížeči.
 
-## Funkce
+![Světlý vzhled aplikace](assets/light.jpg)
+
+## Odstavce
+
+Nastavte počet odstavců, jejich délku a náhodnost. Přidejte krátké nadpisy a seznamy.
+
+## Věty
+
+Zvolte počet a délku vět, jejich zakončení a způsob zobrazení na samostatných řádcích.
+
+## Slova
+
+Vytvořte přesný počet slov s požadovanou délkou, velikostí písmen a oddělovačem.
+
+## Světlý a tmavý vzhled
+
+Přepínejte mezi světlým a tmavým vzhledem nebo nechte aplikaci sledovat nastavení systému. Volba se ukládá v prohlížeči.
+
+![Tmavý vzhled aplikace](assets/dark.jpg)
+
+## Úplný přehled funkcí
 
 - Generování 1–30 odstavců, 1–100 vět nebo 1–3000 slov.
 - Společné nastavení délky všech odstavců: základ 1–12 vět.
@@ -26,6 +46,13 @@ Generátor českého výplňového textu pro grafické návrhy, sazbu a weby. Te
 - Kopírování textu do schránky a stažení TXT v UTF-8.
 - Upravitelné textové pole a počítadlo slov a znaků včetně mezer.
 - Responzivní vzhled a kompaktní zobrazení pro vložení do webu.
+- Pracovní prostředí se třemi částmi: režimy, nastavení a náhled textu.
+- Světlý, tmavý a systémový vzhled; zapamatování volby v prohlížeči. Systémový vzhled reaguje na změnu nastavení zařízení.
+- Šoupátka s přesným číselným vstupem, počítadlo množství s tlačítky − a +.
+- Samostatně zapamatovaný počet odstavců, vět a slov během práce.
+- Formátovaný náhled nadpisů a seznamů, přepnutí do úprav prostého textu.
+- Ovládání klávesnicí, viditelné označení zaměření a oznámení výsledku kopírování.
 - Bez registrace, analytiky, externích knihoven a placeného API.
 
-Vytvořeno pomocí ChatGPT pro [Bahula Studio](https://bahulastudio.cz).
+Vytvořeno ChatGPT pro [Bahula Studio](https://bahulastudio.cz).
+
